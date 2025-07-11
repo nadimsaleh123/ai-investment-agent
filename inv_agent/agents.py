@@ -1,0 +1,46 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import Any, Dict, List, Optional
+
+try:
+    from crewai import Agent
+except ImportError:  # pragma: no cover - library not installed
+    Agent = object  # type: ignore
+
+
+def create_analysis_agent(name: str, description: str) -> Agent:
+    """Factory for creating a CrewAI agent specialized in an asset class."""
+    return Agent(
+        role="analyst",
+        goal="Analyze asset history and daily briefs to advise on investments.",
+        backstory=description,
+        allow_delegation=False,
+        verbose=True,
+    )
+
+
+def create_python_coder_agent() -> Agent:
+    """Agent that can write Python code."""
+    return Agent(
+        role="engineer",
+        goal="Write Python code and build a user interface.",
+        backstory="An expert Python developer helping with tools and front end.",
+        allow_delegation=False,
+        verbose=True,
+    )
+
+
+def build_agents() -> Dict[str, Agent]:
+    """Create all domain agents and return them in a dict."""
+    descriptions = {
+        "gold": "Expert in gold market trends and company performance.",
+        "silver": "Expert in silver market trends and company performance.",
+        "o&g": "Expert in public oil and gas companies.",
+        "renewable energy": "Expert in public renewable energy companies.",
+        "chip manufacturing": "Expert in public chip manufacturing companies.",
+        "ai companies": "Expert in public AI company performance.",
+    }
+    agents = {name: create_analysis_agent(name, desc) for name, desc in descriptions.items()}
+    agents["python_coder"] = create_python_coder_agent()
+    return agents
