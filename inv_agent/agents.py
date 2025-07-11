@@ -6,7 +6,14 @@ from typing import Any, Dict, List, Optional
 try:
     from crewai import Agent
 except ImportError:  # pragma: no cover - library not installed
-    Agent = object  # type: ignore
+    class Agent:  # type: ignore
+        """Fallback agent used when crewAI is unavailable."""
+
+        def __init__(self, *args: Any, **kwargs: Any) -> None:  # noqa: D401
+            """Initialize a dummy agent that ignores all parameters."""
+
+        def run(self, prompt: str) -> str:
+            return "[crewAI not installed]"
 
 
 def create_analysis_agent(name: str, description: str) -> Agent:
