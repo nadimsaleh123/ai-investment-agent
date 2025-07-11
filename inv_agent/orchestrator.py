@@ -15,7 +15,11 @@ class Orchestrator:
     def __init__(self):
         self.agents = build_agents()
         self.memory = MemoryManager()
-        self.crew = Crew(agents=list(self.agents.values()))  # type: ignore
+        if Crew is object:
+            # crewAI isn't installed; skip crew creation to avoid TypeError
+            self.crew = None
+        else:
+            self.crew = Crew(agents=list(self.agents.values()))  # type: ignore
 
     def route_request(self, asset: str, brief: str) -> str:
         """Send the daily brief to the appropriate agent and return the response."""
