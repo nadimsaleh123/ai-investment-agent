@@ -16,7 +16,7 @@ SERPER_API_KEY = os.getenv("SERPER_API_KEY")
 try:
     from crewai import Crew
 except ImportError:  # pragma: no cover - library not installed
-    Crew = object  # type: ignore
+    Crew = None  # type: ignore
 
 from .agents import build_agents
 from .memory import MemoryManager
@@ -26,8 +26,8 @@ class Orchestrator:
     def __init__(self):
         self.agents = build_agents()
         self.memory = MemoryManager()
-        if Crew is object:
-            # crewAI isn't installed; skip crew creation to avoid TypeError
+        if Crew is None:
+            # CrewAI isn't installed; skip crew creation to avoid TypeError
             self.crew = None
         else:
             self.crew = Crew(agents=list(self.agents.values()))  # type: ignore
@@ -44,11 +44,13 @@ class Orchestrator:
             f" Daily brief: {brief}. Provide investment advice based on cause and "
             "effect patterns."
         )
-        # The agent run method is part of CrewAI; we assume it returns a string.
         try:
-            response = agent.run(prompt)  # type: ignore[attr-defined]
+            result = agent.kickoff(prompt)  # type: ignore[attr-defined]
+            response = getattr(result, "raw", str(result))
         except AttributeError:
             response = "[crewAI not installed]"
+        except Exception:
+            response = "[execution failed]"
         self.memory.append_entry(asset, brief)
         return response
 
@@ -85,9 +87,12 @@ class Orchestrator:
                 f"Provide your investment view on {name}."
             )
             try:
-                result = agent.run(prompt)  # type: ignore[attr-defined]
+                res_obj = agent.kickoff(prompt)  # type: ignore[attr-defined]
+                result = getattr(res_obj, "raw", str(res_obj))
             except AttributeError:
                 result = "[crewAI not installed]"
+            except Exception:
+                result = "[execution failed]"
             sections.append(f"## {name}\n{result}")
 
         return "\n\n".join(sections)

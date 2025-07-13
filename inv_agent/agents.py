@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import Any, Dict
 import os
 
@@ -11,12 +10,13 @@ try:
 except ImportError:  # pragma: no cover - library not installed
 
     class Agent:  # type: ignore
-        """Fallback agent used when crewAI is unavailable."""
+        """Fallback agent used when CrewAI is unavailable."""
 
         def __init__(self, *args: Any, **kwargs: Any) -> None:  # noqa: D401
             """Initialize a dummy agent that ignores all parameters."""
 
-        def run(self, prompt: str) -> str:
+        def kickoff(self, prompt: str) -> str:
+            """Return a placeholder response when CrewAI is missing."""
             return "[crewAI not installed]"
 
 
