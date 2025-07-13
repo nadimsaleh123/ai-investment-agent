@@ -21,12 +21,31 @@ def main() -> None:
     assets.remove("python_coder")
     display_assets = [name.title() for name in assets]
 
-    theme = gr.themes.Soft(primary_hue="green")
+    theme = gr.themes.Default(
+        primary_hue="slate",
+        secondary_hue="slate",
+        font=[
+            "-apple-system",
+            "BlinkMacSystemFont",
+            "Helvetica Neue",
+            "Arial",
+            "sans-serif",
+        ],
+    )
 
-    with gr.Blocks(theme=theme) as demo:
+    css = """
+    #container {max-width: 760px; margin: auto; padding-top: 2rem;}
+    body {background-color: #fafafa;}
+    """
+
+    with gr.Blocks(theme=theme, css=css, elem_id="container") as demo:
         gr.Markdown(
-            "# Investment Advisor\n"
-            "Get curated insights for a variety of asset classes."
+            "# Investment Advisor",
+            elem_classes="text-center text-2xl font-semibold mb-2",
+        )
+        gr.Markdown(
+            "Get curated insights for a variety of asset classes.",
+            elem_classes="text-center text-md text-gray-600 mb-4",
         )
 
         with gr.Row():
@@ -38,9 +57,9 @@ def main() -> None:
         output = gr.Textbox(label="Agent Response", lines=8)
 
         with gr.Row():
-            submit = gr.Button("Submit")
-            report = gr.Button("Generate Report")
-            clear = gr.Button("Clear")
+            submit = gr.Button("Submit", variant="primary")
+            report = gr.Button("Generate Report", variant="secondary")
+            clear = gr.Button("Clear", variant="stop")
 
         submit.click(handle_chat, inputs=[asset, brief], outputs=output)
         report.click(handle_report, None, output)
