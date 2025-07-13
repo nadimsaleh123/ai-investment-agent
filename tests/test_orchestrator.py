@@ -16,3 +16,19 @@ def test_orchestrator_initializes_without_crewai(monkeypatch):
     from inv_agent.orchestrator import Orchestrator
     orch = Orchestrator()
     assert orch.crew is None
+
+
+def test_generate_report(monkeypatch):
+    """generate_report should return a string even if requests fail."""
+    from inv_agent.orchestrator import Orchestrator
+
+    orch = Orchestrator()
+
+    class DummyResp:
+        def json(self):
+            return {}
+
+    monkeypatch.setattr("requests.post", lambda *a, **k: DummyResp())
+
+    report = orch.generate_report()
+    assert isinstance(report, str)
