@@ -16,3 +16,31 @@ def test_orchestrator_initializes_without_crewai(monkeypatch):
     from inv_agent.orchestrator import Orchestrator
     orch = Orchestrator()
     assert orch.crew is None
+
+
+def test_route_request_invokes_kickoff(monkeypatch):
+    """route_request should use CrewAI's kickoff when available."""
+    from inv_agent.orchestrator import Orchestrator
+
+    orch = Orchestrator()
+    agent = orch.agents["gold"]
+
+    called = {}
+
+    def fake_kickoff(prompt):
+        called["prompt"] = prompt
+
+        class Out:
+            def __str__(self):
+                return "OK"
+
+        return Out()
+
+    monkeypatch.setattr(agent.__class__, "kickoff", lambda self, prompt: fake_kickoff(prompt))
+    if hasattr(agent, "run"):
+        monkeypatch.delattr(agent.__class__, "run", raising=False)
+
+    result = orch.route_request("gold", "brief")
+
+    assert result == "OK"
+    assert "brief" in called["prompt"]

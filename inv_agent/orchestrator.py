@@ -43,10 +43,21 @@ class Orchestrator:
             f" Daily brief: {brief}. Provide investment advice based on cause and "
             "effect patterns."
         )
-        # The agent run method is part of CrewAI; we assume it returns a string.
+        # Execute the agent using CrewAI if available. Older versions exposed a
+        # ``run`` method while newer releases use ``kickoff`` which returns a
+        # ``LiteAgentOutput`` object. We support both to remain backwards
+        # compatible.
         try:
-            response = agent.run(prompt)  # type: ignore[attr-defined]
+            if hasattr(agent, "run"):
+                response = agent.run(prompt)  # type: ignore[attr-defined]
+            else:
+                result = agent.kickoff(prompt)  # type: ignore[attr-defined]
+                response = str(result)
         except AttributeError:
+            # crewAI isn't installed; fall back to placeholder response
             response = "[crewAI not installed]"
+        except Exception as exc:  # pragma: no cover - runtime issues
+            # Surface the underlying error so the caller can troubleshoot
+            response = f"[error: {exc}]"
         self.memory.append_entry(asset, brief)
         return response
