@@ -8,6 +8,7 @@ This project implements a proof-of-concept multi-agent investment advisor using 
 - An orchestrator that routes daily briefs to the relevant agent and stores the history of briefs.
 - A Python coder agent is included for future automation tasks.
 - Enhanced Gradio interface with improved layout and theming.
+- Generate consolidated reports using Serper research across all assets.
 
 ## Running
 
