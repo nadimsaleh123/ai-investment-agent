@@ -12,6 +12,10 @@ def handle_chat(asset: str, brief: str) -> str:
     return orchestrator.route_request(asset, brief)
 
 
+def handle_report() -> str:
+    return orchestrator.generate_report()
+
+
 def main() -> None:
     assets = list(orchestrator.agents.keys())
     assets.remove("python_coder")
@@ -34,9 +38,11 @@ def main() -> None:
 
         with gr.Row():
             submit = gr.Button("Submit")
+            report = gr.Button("Generate Report")
             clear = gr.Button("Clear")
 
         submit.click(handle_chat, inputs=[asset, brief], outputs=output)
+        report.click(handle_report, None, output)
         clear.click(lambda: "", None, output)
 
     demo.launch()

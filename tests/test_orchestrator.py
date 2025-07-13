@@ -14,6 +14,7 @@ def test_orchestrator_initializes_without_crewai(monkeypatch):
         pytest.skip("crewai is installed")
     monkeypatch.setattr(importlib.util, "find_spec", lambda name: None)
     from inv_agent.orchestrator import Orchestrator
+
     orch = Orchestrator()
     assert orch.crew is None
 
@@ -44,3 +45,19 @@ def test_route_request_invokes_kickoff(monkeypatch):
 
     assert result == "OK"
     assert "brief" in called["prompt"]
+
+
+def test_generate_report(monkeypatch):
+    """generate_report should return a string even if requests fail."""
+    from inv_agent.orchestrator import Orchestrator
+
+    orch = Orchestrator()
+
+    class DummyResp:
+        def json(self):
+            return {}
+
+    monkeypatch.setattr("requests.post", lambda *a, **k: DummyResp())
+
+    report = orch.generate_report()
+    assert isinstance(report, str)

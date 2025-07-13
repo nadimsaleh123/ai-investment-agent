@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 from typing import List
 
+
 class MemoryManager:
     def __init__(self, base_dir: str = "memory"):
         self.base_path = Path(base_dir)
