@@ -11,8 +11,9 @@ from inv_agent.orchestrator import Orchestrator
 
 
 def test_orchestrator_initializes_without_crewai():
-    # Ensure crewai is really not available for this test
-    crewai = importlib.util.find_spec("crewai")
-    assert crewai is None
+    """Initialize orchestrator when crewai is not installed."""
+    crewai_spec = importlib.util.find_spec("crewai")
+    if crewai_spec is not None:
+        pytest.skip("crewai is installed")
     orch = Orchestrator()
     assert orch.crew is None

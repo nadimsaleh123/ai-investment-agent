@@ -18,3 +18,6 @@ venv/
 # OS-specific
 .DS_Store
 Thumbs.db
+
+# Local storage for brief history
+memory/
