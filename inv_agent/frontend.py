@@ -15,13 +15,30 @@ def handle_chat(asset: str, brief: str) -> str:
 def main() -> None:
     assets = list(orchestrator.agents.keys())
     assets.remove("python_coder")
-    with gr.Blocks() as demo:
-        gr.Markdown("# Investment Advisor")
-        asset = gr.Dropdown(label="Asset", choices=assets)
-        brief = gr.Textbox(label="Daily Brief")
-        output = gr.Textbox(label="Agent Response")
-        btn = gr.Button("Submit")
-        btn.click(handle_chat, inputs=[asset, brief], outputs=output)
+
+    theme = gr.themes.Soft(primary_hue="green")
+
+    with gr.Blocks(theme=theme) as demo:
+        gr.Markdown(
+            "# Investment Advisor\n"
+            "Get curated insights for a variety of asset classes."
+        )
+
+        with gr.Row():
+            with gr.Column(scale=1):
+                asset = gr.Dropdown(label="Asset", choices=assets)
+            with gr.Column(scale=2):
+                brief = gr.Textbox(label="Daily Brief", lines=4)
+
+        output = gr.Textbox(label="Agent Response", lines=8)
+
+        with gr.Row():
+            submit = gr.Button("Submit")
+            clear = gr.Button("Clear")
+
+        submit.click(handle_chat, inputs=[asset, brief], outputs=output)
+        clear.click(lambda: "", None, output)
+
     demo.launch()
 
 
