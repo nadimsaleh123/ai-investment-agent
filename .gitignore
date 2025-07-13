@@ -10,6 +10,7 @@ venv/
 # Secret files
 .env
 .env.*
+!.env.example
 
 # Editor configs
 .vscode/
