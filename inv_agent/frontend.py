@@ -9,7 +9,7 @@ orchestrator = Orchestrator()
 
 
 def handle_chat(asset: str, brief: str) -> str:
-    return orchestrator.route_request(asset, brief)
+    return orchestrator.route_request(asset.lower(), brief)
 
 
 def handle_report() -> str:
@@ -19,6 +19,7 @@ def handle_report() -> str:
 def main() -> None:
     assets = list(orchestrator.agents.keys())
     assets.remove("python_coder")
+    display_assets = [name.title() for name in assets]
 
     theme = gr.themes.Soft(primary_hue="green")
 
@@ -30,7 +31,7 @@ def main() -> None:
 
         with gr.Row():
             with gr.Column(scale=1):
-                asset = gr.Dropdown(label="Asset", choices=assets)
+                asset = gr.Dropdown(label="Asset", choices=display_assets)
             with gr.Column(scale=2):
                 brief = gr.Textbox(label="Daily Brief", lines=4)
 
