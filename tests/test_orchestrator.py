@@ -14,5 +14,6 @@ def test_orchestrator_initializes_without_crewai(monkeypatch):
         pytest.skip("crewai is installed")
     monkeypatch.setattr(importlib.util, "find_spec", lambda name: None)
     from inv_agent.orchestrator import Orchestrator
+
     orch = Orchestrator()
     assert orch.crew is None

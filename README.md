@@ -20,4 +20,9 @@ This project implements a proof-of-concept multi-agent investment advisor using 
    python -m inv_agent.frontend
    ```
 
+### Model configuration
+
+All agents default to OpenAI's `gpt-4o-mini` model. You can override this by
+setting the `OPENAI_MODEL_NAME` environment variable in your `.env` file.
+
 CrewAI is required for the agents to function. If it is not installed, placeholder messages will be returned.
