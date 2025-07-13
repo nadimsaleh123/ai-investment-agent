@@ -1,12 +1,13 @@
 # ai-investment-agent
 
-This project implements a proof-of-concept multi-agent investment advisor using [CrewAI](https://github.com/joaomdmoura/crewAI) with a simple Gradio front end.
+This project implements a proof-of-concept multi-agent investment advisor using [CrewAI](https://github.com/joaomdmoura/crewAI) with a polished Gradio front end.
 
 ## Features
 
 - Specialized analysis agents for different markets (gold, silver, oil & gas, renewable energy, chip manufacturing and AI companies).
 - An orchestrator that routes daily briefs to the relevant agent and stores the history of briefs.
 - A Python coder agent is included for future automation tasks.
+- Enhanced Gradio interface with improved layout and theming.
 
 ## Running
 
